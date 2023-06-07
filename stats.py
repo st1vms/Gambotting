@@ -8,6 +8,22 @@ GREEN_DISTANCE_COUNT = 0
 AVG_GREEN_DISTANCE = 0
 GREEN_DISTANCES = []
 
+def get_stats_prob() -> dict[int,int]:
+    global STATS_PROB
+    return sorted(STATS_PROB.items(), key=operator.itemgetter(1))
+
+def get_green_distance_count() -> int:
+    global GREEN_DISTANCE_COUNT
+    return GREEN_DISTANCE_COUNT
+
+def get_green_distances() -> int:
+    global GREEN_DISTANCES
+    return GREEN_DISTANCES
+
+def get_avg_green_distance() -> int:
+    global AVG_GREEN_DISTANCE
+    return AVG_GREEN_DISTANCE
+
 def update_stats(nums: list[int]):
     global STATS_PROB
     global STATS_COLORS
@@ -45,7 +61,7 @@ def update_stats(nums: list[int]):
 
 
 def pretty_print_stats():
-    sorted_words = sorted(STATS_PROB.items(), key=operator.itemgetter(1))
+    sorted_words = get_stats_prob()
     for s, p in sorted_words:
         print(f"{s} -> {round(p*100,4)}%")
 

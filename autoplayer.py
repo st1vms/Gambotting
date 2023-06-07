@@ -25,13 +25,55 @@ BLACK_BUTTON_ID = 2
 
 BALANCE = None
 
+def green_hunt() -> int:
+    print(f"{get_green_distance_count()} >= {max(get_green_distances())} - {get_avg_green_distance()}")
+    if get_green_distance_count() >= max(get_green_distances()) - get_avg_green_distance():
+        return GREEN_BUTTON_ID
+    return -1
 
-def calculate_bet(history: list[int]) -> tuple[int, int]:
+def colds_hunt() -> int:
+    r,b = 0,0
+    s = get_stats_prob()
+    k = s.keys()[:4]
+    for n in k:
+        if n >= 1 and n <= 7:
+            r += 1
+        elif n >= 8 and n <= 14:
+            b += 1
+    if b >= r:
+        return BLACK_BUTTON_ID
+    return RED_BUTTON_ID
+
+def hots_hunt() -> int:
+    r,b = 0,0
+    s = get_stats_prob()
+    k = s.keys()[-4:]
+    for n in k:
+        if n >= 1 and n <= 7:
+            r += 1
+        elif n >= 8 and n <= 14:
+            b += 1
+    if b >= r:
+        return BLACK_BUTTON_ID
+    return RED_BUTTON_ID
+
+def calculate_bet(history: list[int], mode: int, min_bet: int) -> tuple[int, int]:
     update_stats(history)
     pretty_print_stats()
 
-    bet_amount = 0.01
+    bet_amount = min_bet
     button_id = -1
+
+    if mode == 1:
+        # Green hunting
+        button_id = green_hunt()
+    elif mode == 2:
+        # Colds Hunt
+        button_id = colds_hunt()
+    elif mode == 3:
+        # Hots Hunt
+        button_id = hots_hunt()
+
     return (bet_amount, button_id)
 
 
@@ -76,7 +118,7 @@ def bet_click(driver, bet_amount: int, button: int):
     return bet_amount
 
 
-async def bot_task():
+async def bot_task(mode: int, min_bet: float):
     global BALANCE
 
     if os.name == "posix":
@@ -110,7 +152,7 @@ async def bot_task():
                             print("\nRound Won!")
                         else:
                             print("\nRound lost...")
-                    bet, btn = calculate_bet(history)
+                    bet, btn = calculate_bet(history, mode, min_bet)
                     last_bet = (bet_click(driver, bet, btn), btn)
 
             except Exception as e:
@@ -120,9 +162,24 @@ async def bot_task():
         driver.quit()
 
 
-async def main():
-    m = int(input("History starting length (max. 500)\n>>").rstrip().lstrip())
-    await asyncio.gather(history_task(m), bot_task())
+if __name__ == "__main__":
+
+    MENU = """
+    1) Green Hunt
+    2) Colds Hunt
+    3) Hots Hunt
+    >>"""
 
 
-asyncio.run(main())
+    async def main():
+        c = int(input(MENU))
+        if c not in {1, 2}:
+            return
+        m = int(input("History starting length (max. 500)\n>>").rstrip().lstrip())
+        b = input("Minimum Bet amount (min 0.01)\n>>")
+        if not b:
+            b = 0.01
+        b = round(float(b))
+        await asyncio.gather(history_task(m), bot_task(c, b))
+
+    asyncio.run(main())
