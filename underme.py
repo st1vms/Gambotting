@@ -3,9 +3,17 @@ from selenium.webdriver.common.keys import Keys
 import re
 import time
 import random
+import os
 
 XPATH_WAIT_TIMEOUT = 10
-FIREFOX_PROFILE = linux_default_firefox_profile_path()
+
+if os.name == "posix":
+    FIREFOX_PROFILE = linux_default_firefox_profile_path()
+elif os.name == "nt":
+    FIREFOX_PROFILE = win_default_chrome_profile_path()
+else:
+    print("\nUnrecognized OS")
+    quit()
 
 CHAT_UL_XPATH = "/html/body/div[1]/div/div[4]/div/div/div/div/div[2]/ul"
 

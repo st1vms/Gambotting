@@ -8,15 +8,6 @@ GREEN_DISTANCE_COUNT = 0
 AVG_GREEN_DISTANCE = 0
 GREEN_DISTANCES = []
 
-def is_red(n:int) -> bool:
-    return n >= 1 and n <= 7
-
-def is_black(n:int) -> bool:
-    return n >= 8 and n <= 14
-
-def is_green(n:int) -> bool:
-    return n == 0
-
 def update_stats(nums: list[int]):
     global STATS_PROB
     global STATS_COLORS
@@ -31,7 +22,7 @@ def update_stats(nums: list[int]):
     AVG_GREEN_DISTANCE = 0
     GREEN_DISTANCES = []
 
-    r,b,g = 0,0,0
+    r, b, g = 0, 0, 0
     for n in nums:
         if n in range(1, 8):
             r += 1
@@ -46,11 +37,11 @@ def update_stats(nums: list[int]):
 
         STATS_PROB[n] = nums.count(n) / len(nums)
 
-    STATS_COLORS["red"]  = r / (r+b+g)
-    STATS_COLORS["black"] = b / (r+b+g)
-    STATS_COLORS["green"] = g / (r+b+g)
+    STATS_COLORS["red"] = r / (r + b + g)
+    STATS_COLORS["black"] = b / (r + b + g)
+    STATS_COLORS["green"] = g / (r + b + g)
 
-    AVG_GREEN_DISTANCE = round(float(sum(GREEN_DISTANCES) / len(GREEN_DISTANCES)),2)
+    AVG_GREEN_DISTANCE = round(float(sum(GREEN_DISTANCES) / len(GREEN_DISTANCES)), 2)
 
 
 def pretty_print_stats():

@@ -119,10 +119,16 @@ async def num_watcher(driver):
 async def history_task(max_results: int = MAX_RESULTS):
     global HISTORY
 
+    if os.name == "posix":
+        FIREFOX_PROFILE = linux_default_firefox_profile_path()
+    elif os.name == "nt":
+        FIREFOX_PROFILE = win_default_chrome_profile_path()
+    else:
+        print("\nUnrecognized OS")
+        return
+
     opts = get_firefox_options(headless=HEADLESS)
-    driver = get_firefox_webdriver(
-        firefox_profile=linux_default_firefox_profile_path(), options=opts
-    )
+    driver = get_firefox_webdriver(firefox_profile=FIREFOX_PROFILE, options=opts)
 
     try:
         driver.get(START_URL)
@@ -135,6 +141,7 @@ async def history_task(max_results: int = MAX_RESULTS):
         await num_watcher(driver)
     finally:
         driver.quit()
+
 
 if __name__ == "__main__":
     asyncio.run(history_task())

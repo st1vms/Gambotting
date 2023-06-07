@@ -79,10 +79,15 @@ def bet_click(driver, bet_amount: int, button: int):
 async def bot_task():
     global BALANCE
 
+    if os.name == "posix":
+        FIREFOX_PROFILE = linux_default_firefox_profile_path()
+    elif os.name == "nt":
+        FIREFOX_PROFILE = win_default_chrome_profile_path()
+    else:
+        print("\nUnrecognized OS")
+        return
     opts = get_firefox_options(headless=HEADLESS)
-    driver = get_firefox_webdriver(
-        firefox_profile=linux_default_firefox_profile_path(), options=opts
-    )
+    driver = get_firefox_webdriver(firefox_profile=FIREFOX_PROFILE, options=opts)
 
     last_bet = (0, -1)
     try:
