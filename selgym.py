@@ -122,5 +122,9 @@ def linux_default_firefox_profile_path() -> str:
             return os.path.join(profile_path, entry)
     return None
 
-def win_default_chrome_profile_path():
-    return os.path.join(os.getenv('LOCALAPPDATA'), 'Google\\Chrome\\User Data\\Default')
+def win_default_firefox_profile_path():
+    profile_path = os.path.join(os.getenv('APPDATA'), 'Mozilla\Firefox\Profiles')
+    for entry in os.listdir(profile_path):
+        if entry.endswith(".default-release"):
+            return os.path.join(profile_path, entry)
+    return None

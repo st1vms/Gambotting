@@ -122,7 +122,7 @@ async def history_task(max_results: int = MAX_RESULTS):
     if os.name == "posix":
         FIREFOX_PROFILE = linux_default_firefox_profile_path()
     elif os.name == "nt":
-        FIREFOX_PROFILE = win_default_chrome_profile_path()
+        FIREFOX_PROFILE = win_default_firefox_profile_path()
     else:
         print("\nUnrecognized OS")
         return

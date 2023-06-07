@@ -10,7 +10,7 @@ XPATH_WAIT_TIMEOUT = 10
 if os.name == "posix":
     FIREFOX_PROFILE = linux_default_firefox_profile_path()
 elif os.name == "nt":
-    FIREFOX_PROFILE = win_default_chrome_profile_path()
+    FIREFOX_PROFILE = win_default_firefox_profile_path()
 else:
     print("\nUnrecognized OS")
     quit()
@@ -21,7 +21,7 @@ CHAT_MSG_CONTENT_CLASS = "MessageSaystyled__ChatUserName"
 
 CHAT_INPUT_XPATH = "/html/body/div[1]/div/div[4]/div/div/div/div/div[4]/div[1]/input"
 
-UNDER_ME_DELAY = 0.5
+UNDER_ME_DELAY = 0.35
 
 UNDER_ME_CHARS = "0à+ù36.295"
 
