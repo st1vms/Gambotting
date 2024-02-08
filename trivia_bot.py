@@ -64,7 +64,7 @@ class TriviaBot:
         msg = wait_element_by(msg[-1], By.TAG_NAME, "span")
         if not msg:
             return None
-        msg = msg.text.split("\n")
+        msg = msg.text.split("\n", maxsplit=3)
         if len(msg) > 1:
             return msg[2].strip()
         if msg:
