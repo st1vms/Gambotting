@@ -65,8 +65,10 @@ class TriviaBot:
         if not msg:
             return None
         msg = msg.text.split("\n")
-        if msg:
+        if len(msg) > 1:
             return msg[2].strip()
+        if msg:
+            return msg[1].strip()
         return None
 
     def __send_newline(self, actions: ActionChains) -> None:
