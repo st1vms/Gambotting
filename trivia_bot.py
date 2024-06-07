@@ -17,21 +17,24 @@ from selgym.gym import (
 )
 
 
-def random_sleep(_min: float, _max: float) -> None:
-    """Random sleep interval"""
-    sleep(round(uniform(_min, _max), 3))
-
+FIREFOX_PROFILE = r"" ""
+HEADLESS = False
 
 BASE_URL = "https://gamdom.com"
 
-UNDER_ME_REGEX = re_compile(r'^["\']?\$?\s*0?\.\s*5\s*(under ?me)\W*["\']?$')
-UNDER_ME_CHARS = "0à+ù36.295"
+UNDER_ME_REGEX = re_compile(r'^["\']?\$?\s*0?[,\.]?\s*5\s*(under ?me)\W*["\']?$')
+UNDER_ME_CHARS = "0à+ù36.295ò"
 
 UNDER_ME_DELAY_MIN = 0.1
 UNDER_ME_DELAY_MAX = 0.3
 
 CHAT_UL_XPATH = '//*[@id="chat-messages"]'
 CHAT_BOX_CSSS = 'div[role="textbox"]'
+
+
+def random_sleep(_min: float, _max: float) -> None:
+    """Random sleep interval"""
+    sleep(round(uniform(_min, _max), 3))
 
 
 class TriviaBot:
@@ -47,6 +50,7 @@ class TriviaBot:
 
     def __is_under_me(self, text: str) -> int:
         """Return underme message index, -1 if no underme"""
+        text = text.replace("1x").replace("2x").replace("3x")
         if not bool(UNDER_ME_REGEX.search(text)):
             return -1
         if text.lower().find("2nd") != -1:
@@ -85,7 +89,7 @@ class TriviaBot:
                 self.__send_newline(actions)
             else:
                 actions.send_keys(ch).perform()
-        actions.key_down(Keys.ENTER).key_up(Keys.ENTER)
+        actions.key_down(Keys.ENTER).key_up(Keys.ENTER).perform()
 
     def __bot_main(self) -> None:
         """Bot main routine"""
@@ -115,7 +119,8 @@ class TriviaBot:
                 random_sleep(UNDER_ME_DELAY_MIN, UNDER_ME_DELAY_MAX)
                 self.__send_chat_message(textbox, answer)
                 input("\n\n!!!TRIVIA ANSWERED!!!\n\nPress Enter to continue...")
-            ix -= 1
+            else:
+                ix -= 1
 
     def start(self) -> None:
         """Start trivia bot webdriver instance"""
@@ -139,4 +144,4 @@ class TriviaBot:
 
 
 if __name__ == "__main__":
-    TriviaBot(headless=True, firefox_profile="/home/st1v/.mozilla/firefox/j2lzzsg2.python").start()
+    TriviaBot(headless=HEADLESS, firefox_profile=FIREFOX_PROFILE).start()
